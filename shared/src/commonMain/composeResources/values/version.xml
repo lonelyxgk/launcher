@@ -1,0 +1,4 @@
+<resources>
+    <!--  todo: 改为读取build.gradle.kts获取版本  -->
+    <string name="version">1.0.0</string>
+</resources>
