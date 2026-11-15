@@ -55,6 +55,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
+import top.esajk.launcher.core.installMinecraft
 
 @Serializable
 private enum class VersionType {
@@ -231,9 +232,19 @@ fun DownloadPage(drawerState: DrawerState) {
                                         Button(
                                             onClick = {
                                                 scope.launch {
-                                                    snackbarHostState.showSnackbar("正在下载中" + m.data.versions[index].url)
+                                                    val version = m.data.versions[index]
+                                                    val progress = launch {
+                                                        snackbarHostState.showSnackbar("正在下载中 " + version.url)
+                                                    }
+                                                    try {
+                                                        val gameDir = installMinecraft(version.id)
+                                                        progress.cancel()
+                                                        snackbarHostState.showSnackbar("完成下载 $gameDir")
+                                                    } catch (e: Exception) {
+                                                        progress.cancel()
+                                                        snackbarHostState.showSnackbar("下载失败: ${e.message}")
+                                                    }
                                                 }
-
                                             }
                                         ) {
                                             Text("下载")
@@ -267,6 +278,4 @@ private fun formatTime(instant: Instant): String {
     val dt = instant.toLocalDateTime(TimeZone.currentSystemDefault())
     return "发行日期:" + dt.year + "/" + dt.month.number + "/" + dt.day
 }
-
-
 

@@ -32,6 +32,7 @@ kotlin {
             implementation(libs.compose.ui.test)
         }
         jvmMain.dependencies {
+            implementation("fr.flowarg:flowupdater:1.9.4")
         }
         jvmTest.dependencies {
         }
